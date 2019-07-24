@@ -11,6 +11,7 @@ Node newNode(int data){
 }
 
 Node find(Node y){
+
     if(y==NULL){
             return NULL;
 	 }
@@ -21,10 +22,20 @@ Node find(Node y){
 // returning the root of the tree
 Node unionOp(Node x,Node y)
 {
+
+  // cout<<"INSIDE "<<x->data<<"INSDIE";
   if(find(y)==y)
    {
+     if(x->data>y->data){
      (x->child).push_back(y);
      y->parent=x;     
+     }
+     else
+     {
+       (y->child).push_back(x);
+     x->parent=y; 
+     }
+     
      return find(x);
    }
   else if(find(x)==find(y)){  

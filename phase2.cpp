@@ -1,19 +1,11 @@
 #include<iostream>
 #include "unionFind.cpp"
-// #include "distFunc.cpp"
+#include "distFunc.cpp"
 #include<bits/stdc++.h>
 
 using namespace std;
 
-double euclidean(Row row1,Row row2){
-    double ans=0;
-    int M=row1->fields.size();
-    
-    for(int i=0;i<M;i++)
-    ans=ans+(pow((row1->fields[i])-(row2->fields[i]),2));
 
-    return ans;
-}
 
 //M denotes the field length
 //N denotes the number of records
@@ -82,28 +74,34 @@ vector<Row> dbscan(double dataset[N][M],int minpoints,double eps){
     vector<Row> neighs;
     int minpts;
     Node temp;
-    
+    int temp1;
     for(int ro=0;ro<transdataset.size();ro++){
+        cout<<"Processing"<<ro<<endl;
         
         neighs=getNeighrestNeighbours(transdataset,transdataset[ro],eps);
+        
         if(neighs.size()>=minpoints){
             core[ro]=1;
-
+            
             for(int neigh=0;neigh<neighs.size();neigh++){
-                if(core[neighs[neigh]->actual_id])
-                
+    
+                temp1=core[neighs[neigh]->actual_id];
+                if(temp1)
                 {
-                    cout << typeid(&(transdataset[ro]->id)).name() << '\n';
+        
                     //modify parent id's
-                    // temp=unionOp(transdataset[ro]->id,neighs[neigh]->id);
-                    
+                    temp=unionOp(&transdataset[ro]->id,&neighs[neigh]->id);
+                     cout<<"\nThe parent is "<<temp->data<<endl;
                 }
                 else
                 {
                     if(!visited[neighs[neigh]->actual_id]){
                         visited[neighs[neigh]->actual_id]=1;
+                        // cout<<" Trying union for "<<transdataset[ro]->id.data<<" and "<<neighs[neigh]->id.data<<endl;
+                    temp=unionOp(&transdataset[ro]->id,&neighs[neigh]->id);
+
+                    cout<<"\nThe parent is "<<temp->data<<endl;
                     }
-                    //temp=unionOp(&transdataset[ro]->id,&neighs[neigh]->id);
                 }
                 
             }
@@ -116,15 +114,48 @@ vector<Row> dbscan(double dataset[N][M],int minpoints,double eps){
 int main()
 {
     double dataset[N][M]={0};
-    vector<Row> out_data= dbscan(dataset,1,0);
+    dataset[0][0]=0.5;
+    dataset[0][1]=0.1;
+    dataset[0][2]=0.2;
+    dataset[0][3]=0.4;
+    dataset[0][4]=0.7;
+    
+    dataset[1][0]=0.5;
+    dataset[1][1]=0.0;
+    dataset[1][2]=0.2;
+    dataset[1][3]=0.4;
+    dataset[1][4]=0.9;
+
+    dataset[3][0]=2;
+    dataset[3][1]=1;
+    dataset[3][2]=2;
+    dataset[3][3]=4;
+    dataset[3][4]=7;
+
+    dataset[9][0]=0.5;
+    dataset[9][1]=0.1;
+    dataset[9][2]=0.2;
+    dataset[9][3]=0.4;
+    dataset[9][4]=0.7;
+
+    dataset[6][0]=2.5;
+    dataset[6][1]=1.4;
+    dataset[6][2]=2.2;
+    dataset[6][3]=4.2;
+    dataset[6][4]=7.1;
+    
+    vector<Row> out_data= dbscan(dataset,1,0.1);
     double out[N][M+2]={0};
+
     for(int i=0;i<N;i++){
         int j=0;
         for(j=0;j<M;j++){
             out[i][j]=out_data[i]->fields[j];
         }
+
         Node dat=find(&out_data[i]->id);
-        out[i][j+1]=dat->data;
+        cout<<"DAT is "<<j << dat->data<<endl;
+        out[i][j]=(double)dat->data;
     }
 
     for(int i=0;i<N;i++){
