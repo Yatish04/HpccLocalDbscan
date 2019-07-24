@@ -113,6 +113,7 @@ vector<Row> dbscan(double dataset[N][M],int minpoints,double eps){
 
 int main()
 {
+
     double dataset[N][M]={0};
     dataset[0][0]=0.5;
     dataset[0][1]=0.1;
@@ -147,14 +148,20 @@ int main()
     vector<Row> out_data= dbscan(dataset,1,0.1);
     double out[N][M+2]={0};
 
+
+    //Putting cluster number in the last column
+    //is_core can be accessed from vector core
+    //visited has marked for cluster
+    
     for(int i=0;i<N;i++){
         int j=0;
         for(j=0;j<M;j++){
             out[i][j]=out_data[i]->fields[j];
         }
+        
 
         Node dat=find(&out_data[i]->id);
-        cout<<"DAT is "<<j << dat->data<<endl;
+        cout<<"cluster no is "<<j << dat->data<<endl;
         out[i][j]=(double)dat->data;
     }
 
